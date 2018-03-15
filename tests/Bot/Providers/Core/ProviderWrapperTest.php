@@ -3,6 +3,7 @@
 namespace seregazhuk\tests\Bot\Providers\Core;
 
 use PHPUnit\Framework\TestCase;
+use seregazhuk\PinterestBot\Api\Providers\Common\ProfileResolver;
 use seregazhuk\PinterestBot\Api\Request;
 use seregazhuk\PinterestBot\Api\Response;
 use seregazhuk\PinterestBot\Api\Session;
@@ -46,7 +47,7 @@ class ProviderWrapperTest extends TestCase
     {
         $request = new Request(new CurlHttpClient(new Cookies()), new Session());
 
-        $provider = new TestProvider(new ProvidersContainer($request), $request);
+        $provider = new TestProvider(new ProfileResolver($request), $request);
 
         return new ProviderWrapper($provider);
     }

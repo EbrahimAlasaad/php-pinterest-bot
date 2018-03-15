@@ -26,7 +26,9 @@ trait CookiesHelper
             $content .= "\n#HttpOnly_.pinterest.com        TRUE    /       TRUE    1505894318      _auth   1";
         }
 
-        if (file_exists($this->cookieFilePath)) unlink($this->cookieFilePath);
+        if (file_exists($this->cookieFilePath)) {
+            unlink($this->cookieFilePath);
+        }
 
         file_put_contents($this->cookieFilePath, preg_replace('/ +/', "\t",$content));
     }
@@ -37,7 +39,7 @@ trait CookiesHelper
      */
     protected function getCookiePath($username = '')
     {
-        return sys_get_temp_dir() . DIRECTORY_SEPARATOR . HttpClient::COOKIE_PREFIX . "$username";
+        return sys_get_temp_dir() . DIRECTORY_SEPARATOR . HttpClient::COOKIE_PREFIX . $username;
     }
 
     protected function tearDown()

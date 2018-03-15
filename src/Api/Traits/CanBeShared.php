@@ -6,7 +6,7 @@ use seregazhuk\PinterestBot\Helpers\UrlBuilder;
 
 trait CanBeShared
 {
-    use HandlesRequest, ResolvesCurrentUser;
+    use HandlesRequest;
 
     /**
      * @return array

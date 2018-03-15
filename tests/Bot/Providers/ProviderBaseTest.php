@@ -5,6 +5,7 @@ namespace seregazhuk\tests\Bot\Providers;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
+use seregazhuk\PinterestBot\Api\Providers\Common\ProfileResolver;
 use seregazhuk\PinterestBot\Api\Providers\Core\Provider;
 use seregazhuk\PinterestBot\Api\ProvidersContainer;
 use seregazhuk\PinterestBot\Api\Request;
@@ -64,10 +65,10 @@ abstract class ProviderBaseTest extends TestCase
      */
     protected function getProvider()
     {
-        $container = new ProvidersContainer($this->request);
+        $profileResolver = new ProfileResolver($this->request);
         $providerClassName = $this->getProviderClass();
 
-        return new $providerClassName($container, $this->request);
+        return new $providerClassName($profileResolver, $this->request);
     }
 
     /**

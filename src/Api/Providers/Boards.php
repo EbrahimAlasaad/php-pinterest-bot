@@ -8,12 +8,11 @@ use seregazhuk\PinterestBot\Api\Traits\Searchable;
 use seregazhuk\PinterestBot\Api\Traits\CanBeDeleted;
 use seregazhuk\PinterestBot\Api\Traits\BoardInvites;
 use seregazhuk\PinterestBot\Api\Traits\SendsMessages;
-use seregazhuk\PinterestBot\Api\Traits\ResolvesCurrentUser;
 use seregazhuk\PinterestBot\Api\Providers\Core\FollowableProvider;
 
 class Boards extends FollowableProvider
 {
-    use CanBeDeleted, Searchable, SendsMessages, ResolvesCurrentUser, BoardInvites;
+    use CanBeDeleted, Searchable, SendsMessages, BoardInvites;
 
     const BOARD_PRIVACY_PUBLIC = 'public';
     const BOARD_PRIVACY_PRIVATE = 'secret';
@@ -64,7 +63,7 @@ class Boards extends FollowableProvider
      */
     public function forMe()
     {
-        $currentUserName = $this->resolveCurrentUsername();
+        $currentUserName = $this->profileResolver->username();
 
         if (!$currentUserName) {
             return [];

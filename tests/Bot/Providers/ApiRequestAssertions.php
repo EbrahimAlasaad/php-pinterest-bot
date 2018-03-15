@@ -45,9 +45,11 @@ trait ApiRequestAssertions
     {
         $query = $this->request->createQuery($data);
 
+        $path = empty($query) ? $url : $url . '?' . $query;
+
         $this->request
             ->shouldHaveReceived('exec')
-            ->with($url . '?' . $query, '');
+            ->with($path, '');
     }
 
     /**

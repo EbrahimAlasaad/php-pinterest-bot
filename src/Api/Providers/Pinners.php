@@ -6,12 +6,11 @@ use seregazhuk\PinterestBot\Helpers\UrlBuilder;
 use seregazhuk\PinterestBot\Helpers\Pagination;
 use seregazhuk\PinterestBot\Api\Traits\Searchable;
 use seregazhuk\PinterestBot\Exceptions\WrongFollowingType;
-use seregazhuk\PinterestBot\Api\Traits\ResolvesCurrentUser;
 use seregazhuk\PinterestBot\Api\Providers\Core\FollowableProvider;
 
 class Pinners extends FollowableProvider
 {
-    use Searchable, ResolvesCurrentUser;
+    use Searchable;
 
     /**
      * @var array
@@ -209,7 +208,7 @@ class Pinners extends FollowableProvider
     public function followers($username = '', $limit = Pagination::DEFAULT_LIMIT)
     {
         $username = empty($username) ?
-            $this->resolveCurrentUsername() :
+            $this->profileResolver->username() :
             $username;
 
         if (!$username) {

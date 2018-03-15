@@ -136,7 +136,7 @@ trait BoardInvites
     {
         $data = [
             'board_id'        => $boardId,
-            'invited_user_id' => $this->container->user->id(),
+            'invited_user_id' => $this->profileResolver->id(),
         ];
 
         return $this->post($endpoint, $data)->isOk();

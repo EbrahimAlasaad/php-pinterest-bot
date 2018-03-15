@@ -4,6 +4,7 @@ namespace seregazhuk\tests\Bot\Providers\Core;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
+use seregazhuk\PinterestBot\Api\Providers\Common\ProfileResolver;
 use seregazhuk\PinterestBot\Api\Request;
 use seregazhuk\PinterestBot\Api\Response;
 use seregazhuk\PinterestBot\Helpers\Pagination;
@@ -88,8 +89,7 @@ class ProviderTest extends TestCase
      */
     protected function makeProviderWithRequest(Request $request)
     {
-        $container = new ProvidersContainer($request);
-        return Mockery::mock(DummyProvider::class, [$container, $request])
+        return Mockery::mock(DummyProvider::class, [new ProfileResolver($request), $request])
             ->makePartial();
     }
 

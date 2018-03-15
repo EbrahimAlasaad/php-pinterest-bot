@@ -2,6 +2,7 @@
 
 namespace seregazhuk\PinterestBot\Api\Providers\Core;
 
+use seregazhuk\PinterestBot\Api\Providers\Common\ProfileResolver;
 use seregazhuk\PinterestBot\Api\Request;
 use seregazhuk\PinterestBot\Api\Response;
 use function seregazhuk\PinterestBot\class_uses_recursive;
@@ -31,15 +32,15 @@ abstract class Provider
     /**
      * @var ProvidersContainer
      */
-    protected $container;
+    protected $profileResolver;
 
     /**
-     * @param ProvidersContainer $container
+     * @param ProfileResolver $profileResolver
      * @param Request $request
      */
-    public function __construct(ProvidersContainer $container, Request $request)
+    public function __construct(ProfileResolver $profileResolver, Request $request)
     {
-        $this->container = $container;
+        $this->profileResolver = $profileResolver;
         $this->request = $request;
     }
 
@@ -88,7 +89,9 @@ abstract class Provider
     {
         $query = $this->request->createQuery($requestOptions, $bookmarks);
 
-        return Response::fromJson($this->request->exec($resourceUrl . '?' . $query, ''));
+        $path = empty($query) ? $resourceUrl : $resourceUrl . '?' . $query;
+
+        return Response::fromJson($this->request->exec($path, ''));
     }
 
     /**

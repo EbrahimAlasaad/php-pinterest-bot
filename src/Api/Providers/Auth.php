@@ -6,12 +6,11 @@ use LogicException;
 use seregazhuk\PinterestBot\Helpers\UrlBuilder;
 use seregazhuk\PinterestBot\Api\Forms\Registration;
 use seregazhuk\PinterestBot\Api\Providers\Core\Provider;
-use seregazhuk\PinterestBot\Api\Traits\ResolvesCurrentUser;
 use seregazhuk\PinterestBot\Api\Traits\SendsRegisterActions;
 
 class Auth extends Provider
 {
-    use SendsRegisterActions, ResolvesCurrentUser;
+    use SendsRegisterActions;
 
     /**
      * @var array
@@ -201,7 +200,7 @@ class Auth extends Provider
      */
     protected function processAutoLogin($username)
     {
-        return $this->request->autoLogin($username) && $this->resolveCurrentUserId();
+        return $this->request->autoLogin($username) && $this->profileResolver->id();
     }
 
     /**

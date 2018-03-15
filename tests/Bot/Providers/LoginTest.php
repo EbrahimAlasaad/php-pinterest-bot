@@ -26,8 +26,6 @@ class LoginTest extends ProviderBaseTest
         $this->request->shouldReceive('autoLogin')->andReturn(true);
         // First check when we call provider's `login` method
         $this->request->shouldReceive('isLoggedIn')->once()->andReturn(false);
-        // Second check when provider tries to resolve current user id
-        $this->request->shouldReceive('isLoggedIn')->once()->andReturn(true);
 
         $provider->login('johnDoe', 'secret');
 

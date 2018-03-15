@@ -3,6 +3,7 @@
 namespace seregazhuk\PinterestBot\Api;
 
 use seregazhuk\PinterestBot\Api\Providers\BoardSections;
+use seregazhuk\PinterestBot\Api\Providers\Common\ProfileResolver;
 use seregazhuk\PinterestBot\Api\Providers\Pins;
 use seregazhuk\PinterestBot\Api\Providers\Suggestions;
 use seregazhuk\PinterestBot\Api\Providers\User;
@@ -122,7 +123,8 @@ class ProvidersContainer
      */
     protected function buildProvider($className)
     {
-        $provider = new $className($this, $this->request);
+        $profileResolver = new ProfileResolver($this->request);
+        $provider = new $className($profileResolver, $this->request);
 
         return new ProviderWrapper($provider);
     }
