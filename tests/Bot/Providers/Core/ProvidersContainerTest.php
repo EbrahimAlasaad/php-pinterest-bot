@@ -42,13 +42,6 @@ class ProvidersContainerTest extends TestCase
     }
 
     /** @test */
-    public function it_should_return_provider_wrapper_instance_when_accessing_providers()
-    {
-        $provider = $this->container->pinners;
-        $this->assertInstanceOf(ProviderWrapper::class, $provider);
-    }
-
-    /** @test */
     public function it_should_throw_exception_on_getting_wrong_provider()
     {
         $this->expectException(WrongProvider::class);

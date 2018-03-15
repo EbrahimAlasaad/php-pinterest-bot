@@ -2,24 +2,22 @@
 
 namespace seregazhuk\PinterestBot\Api;
 
+use seregazhuk\PinterestBot\Api\Contracts\HttpClient;
+use seregazhuk\PinterestBot\Api\Providers\Auth;
+use seregazhuk\PinterestBot\Api\Providers\Boards;
 use seregazhuk\PinterestBot\Api\Providers\BoardSections;
-use seregazhuk\PinterestBot\Api\Providers\Common\ProfileResolver;
+use seregazhuk\PinterestBot\Api\Providers\Comments;
+use seregazhuk\PinterestBot\Api\Providers\Core\Provider;
+use seregazhuk\PinterestBot\Api\Providers\Inbox;
+use seregazhuk\PinterestBot\Api\Providers\Interests;
+use seregazhuk\PinterestBot\Api\Providers\Keywords;
+use seregazhuk\PinterestBot\Api\Providers\Password;
+use seregazhuk\PinterestBot\Api\Providers\Pinners;
 use seregazhuk\PinterestBot\Api\Providers\Pins;
 use seregazhuk\PinterestBot\Api\Providers\Suggestions;
-use seregazhuk\PinterestBot\Api\Providers\User;
-use seregazhuk\PinterestBot\Api\Providers\Auth;
-use seregazhuk\PinterestBot\Api\Providers\Inbox;
-use seregazhuk\PinterestBot\Api\Providers\Boards;
 use seregazhuk\PinterestBot\Api\Providers\Topics;
-use seregazhuk\PinterestBot\Api\Providers\Pinners;
-use seregazhuk\PinterestBot\Api\Providers\Keywords;
-use seregazhuk\PinterestBot\Api\Providers\Comments;
-use seregazhuk\PinterestBot\Api\Providers\Password;
-use seregazhuk\PinterestBot\Api\Providers\Interests;
+use seregazhuk\PinterestBot\Api\Providers\User;
 use seregazhuk\PinterestBot\Exceptions\WrongProvider;
-use seregazhuk\PinterestBot\Api\Contracts\HttpClient;
-use seregazhuk\PinterestBot\Api\Providers\Core\Provider;
-use seregazhuk\PinterestBot\Api\Providers\Core\ProviderWrapper;
 
 /**
  * @property-read Pins $pins
@@ -58,10 +56,16 @@ class ProvidersContainer
 
     /**
      * @param Request $request
+     * @param Provider[] $providers
      */
-    public function __construct(Request $request)
+    public function __construct(Request $request, Provider ...$providers)
     {
         $this->request = $request;
+
+        foreach ($providers as $provider) {
+            $alias = strtolower(get_class($provider));
+            $this->providers[$alias] = $provider;
+        }
     }
 
     /**
@@ -73,60 +77,11 @@ class ProvidersContainer
      */
     public function __get($provider)
     {
-        return $this->getProvider($provider);
-    }
-
-
-    /**
-     * Gets provider object by name. If there is no such provider
-     * in providers array, it will try to create it, then save
-     * it, and then return.
-     *
-     * @param string $provider
-     *
-     * @throws WrongProvider
-     *
-     * @return Provider
-     */
-    public function getProvider($provider)
-    {
-        $provider = strtolower($provider);
-
-        // Check if an instance has already been initiated. If not
-        // build it and then add to the providers array.
         if (!isset($this->providers[$provider])) {
-            $this->addProvider($provider);
+            throw new WrongProvider("Provider $provider not found.");
         }
 
         return $this->providers[$provider];
-    }
-
-    /**
-     * Creates provider by class name, and if success saves
-     * it to providers array. Provider class must exist in PROVIDERS_NAMESPACE.
-     *
-     * @param string $provider
-     * @throws WrongProvider
-     */
-    protected function addProvider($provider)
-    {
-        $className = $this->resolveProviderClass($provider);
-
-        $this->providers[$provider] = $this->buildProvider($className);
-    }
-
-    /**
-     * Build Provider object.
-     *
-     * @param string $className
-     * @return ProviderWrapper
-     */
-    protected function buildProvider($className)
-    {
-        $profileResolver = new ProfileResolver($this->request);
-        $provider = new $className($profileResolver, $this->request);
-
-        return new ProviderWrapper($provider);
     }
 
     /**
@@ -138,34 +93,5 @@ class ProvidersContainer
     public function getHttpClient()
     {
         return $this->request->getHttpClient();
-    }
-
-    /**
-     * @param string $provider
-     * @return string
-     * @throws WrongProvider
-     */
-    protected function resolveProviderClass($provider)
-    {
-        $className = __NAMESPACE__ . '\\Providers\\' . ucfirst($provider);
-
-        if (!$this->checkIsProviderClass($className)) {
-            throw new WrongProvider("Provider $className not found.");
-        }
-
-        return $className;
-    }
-
-    /**
-     * @param string $className
-     * @return bool
-     */
-    protected function checkIsProviderClass($className)
-    {
-        if (!class_exists($className)) {
-            return false;
-        }
-
-        return in_array(Provider::class, class_parents($className));
     }
 }
