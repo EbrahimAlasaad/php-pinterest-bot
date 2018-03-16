@@ -49,7 +49,7 @@ class ProfileResolver
      */
     public function username()
     {
-       return $this->extractFromProfile('username');
+        return $this->extractFromProfile('username');
     }
 
     /**
