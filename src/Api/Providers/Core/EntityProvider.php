@@ -3,9 +3,6 @@
 namespace seregazhuk\PinterestBot\Api\Providers\Core;
 
 /**
- * Class EntityProvider
- * @package seregazhuk\PinterestBot\Api\Providers
- *
  * @property string entityIdName
  */
 abstract class EntityProvider extends Provider

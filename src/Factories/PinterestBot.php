@@ -34,6 +34,7 @@ class PinterestBot
     {
         $httpClient = new CurlHttpClient(new Cookies());
         $request = new Request($httpClient, new Session());
+
         return new ProvidersContainer(
             $request,
             new Auth(new ProfileResolver($request), $request),
